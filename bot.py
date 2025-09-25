@@ -10,14 +10,18 @@ def handle_start(message):
 
 @bot.message_handler(commands=['help'])
 def handle_help(message):
-    bot.send_message(message.chat.id, "Доступные команды:  ...")
+    bot.send_message(message.chat.id, "Доступные команды:\n /show_city <city_name> - Показать город на карте\n /remember_city <city_name> - Запомнить город\n /show_my_cities - Показать все запомненные города")
     # Допиши команды бота
-
+    
 
 @bot.message_handler(commands=['show_city'])
 def handle_show_city(message):
     city_name = message.text.split()[-1]
     # Реализуй отрисовку города по запросу
+    user_id = message.chat.id
+    manager.create_grapf(f'{user_id}_map.png', [city_name])
+    with open (f'{user_id}_map.png', 'rb') as photo:
+        bot.send_photo(message.chat.id, photo)
 
 
 @bot.message_handler(commands=['remember_city'])
@@ -33,7 +37,13 @@ def handle_remember_city(message):
 def handle_show_visited_cities(message):
     cities = manager.select_cities(message.chat.id)
     # Реализуй отрисовку всех городов
-
+    if cities:
+        
+        manager.create_grapf(f'{message.chat.id}_map.png',cities)
+        with open (f'{message.chat.id}_map.png', 'rb') as photo:
+            bot.send_photo(message.chat.id, photo)
+    else:
+        bot.send_message(message.chat.id, 'Ты еще не добавил ни одного города!')
 
 if __name__=="__main__":
     manager = DB_Map(DATABASE)

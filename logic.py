@@ -59,12 +59,36 @@ class DB_Map():
             return coordinates
 
     def create_grapf(self, path, cities):
-        pass
+        ax = plt.axes(projection=ccrs.PlateCarree())
+        ax.stock_img()
+        for city in cities:
+            coordinates = self.get_coordinates(city)
+            if coordinates:
+                lat, lng = coordinates
+                plt.plot([lng], [lat], color='r', linewidth = 5, marker='.', transform=ccrs.Geodetic())
+                plt.text(lng + 3, lat + 12, city, horizontalalignment='left', transform=ccrs.Geodetic())
+        plt.savefig(path)
+        plt.close()
         
     def draw_distance(self, city1, city2):
-        pass
-
-
+        city1_cords = self.get_coordinates(city1)
+        city2_cords = self.get_coordinates(city2)  # Прушков
+        fig, ax = plt.subplots(subplot_kw={'projection': ccrs.PlateCarree()})
+        ax.stock_img()
+        plt.plot([city1_cords[1], city2_cords[1]], [city1_cords[0], city2_cords[0]],
+         color='red', linewidth=2, marker='o',
+         transform=ccrs.Geodetic(),  # Используем геодезическую проекцию для преобразования координат
+         )
+        plt.text(city1_cords[1] + 3, city1_cords[0] + 12, city1,
+         horizontalalignment='left',  # Горизонтальное выравнивание текста
+         transform=ccrs.Geodetic()  # Используем геодезическую проекцию для преобразования координат
+         )
+        plt.text(city2_cords[1] + 3, city2_cords[0] + 12, city2,
+         horizontalalignment='left',  # Горизонтальное выравнивание текста
+         transform=ccrs.Geodetic()  # Используем геодезическую проекцию для преобразования координат
+         )
+        plt.savefig(f'{city1}_{city2}_distance.png')
+        plt.close()
 if __name__=="__main__":
     
     m = DB_Map(DATABASE)
