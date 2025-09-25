@@ -5,7 +5,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import random
-
+import requests
 class DB_Map():
     def __init__(self, database):
         self.database = database
@@ -91,6 +91,16 @@ class DB_Map():
          )
         plt.savefig(f'{city1}_{city2}_distance.png')
         plt.close()
+
+    def get_time(self, timezone: str):
+        url = f"https://www.timeapi.io/api/Time/current/zone?timeZone={timezone}"
+        r = requests.get(url, timeout=10)
+        r.raise_for_status()
+        return r.json().get("dateTime") 
+
+
+    #data = get_time("Europe/Paris")
+    #print("Current time in Paris:", data["dateTime"])
 if __name__=="__main__":
     
     m = DB_Map(DATABASE)

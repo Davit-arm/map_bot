@@ -45,6 +45,16 @@ def handle_show_visited_cities(message):
     else:
         bot.send_message(message.chat.id, 'Ты еще не добавил ни одного города!')
 
+@bot.message_handler(commands=['time'])
+def handle_time(message):
+    city_name = message.text.split()[-1]
+    timezone = manager.get_time(city_name)
+    if timezone:
+        bot.send_message(message.chat.id, f'Текущее время в {city_name}: {timezone}')
+    else:
+        bot.send_message(message.chat.id, 'Не удалось определить время для этого города. Убедись, что он написан на английском!')
+
+        
 if __name__=="__main__":
     manager = DB_Map(DATABASE)
     bot.polling()
