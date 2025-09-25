@@ -49,10 +49,13 @@ def handle_show_visited_cities(message):
 def handle_time(message):
     city_name = message.text.split()[-1]
     timezone = manager.get_time(city_name)
-    if timezone:
-        bot.send_message(message.chat.id, f'Текущее время в {city_name}: {timezone}')
-    else:
-        bot.send_message(message.chat.id, 'Не удалось определить время для этого города. Убедись, что он написан на английском!')
+    try:
+        if timezone:
+            bot.send_message(message.chat.id, f'Текущее время в {city_name}: {timezone}')
+        else:
+            bot.send_message(message.chat.id, 'Не удалось определить время для этого города. Убедись, что он написан на английском!')
+    except Exception as e:
+        bot.send_message(message.chat.id, 'Произошла ошибка при получении времени. Попробуй еще раз позже.')
 
         
 if __name__=="__main__":
