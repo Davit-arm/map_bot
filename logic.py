@@ -4,7 +4,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
-
+import random
 
 class DB_Map():
     def __init__(self, database):
@@ -61,11 +61,12 @@ class DB_Map():
     def create_grapf(self, path, cities):
         ax = plt.axes(projection=ccrs.PlateCarree())
         ax.stock_img()
+        random_color = random.choice(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
         for city in cities:
             coordinates = self.get_coordinates(city)
             if coordinates:
                 lat, lng = coordinates
-                plt.plot([lng], [lat], color='r', linewidth = 5, marker='.', transform=ccrs.Geodetic())
+                plt.plot([lng], [lat], color=random_color, linewidth = 5, marker='.', transform=ccrs.Geodetic())
                 plt.text(lng + 3, lat + 12, city, horizontalalignment='left', transform=ccrs.Geodetic())
         plt.savefig(path)
         plt.close()
@@ -73,10 +74,11 @@ class DB_Map():
     def draw_distance(self, city1, city2):
         city1_cords = self.get_coordinates(city1)
         city2_cords = self.get_coordinates(city2)  # Прушков
+        random_color = random.choice(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
         fig, ax = plt.subplots(subplot_kw={'projection': ccrs.PlateCarree()})
         ax.stock_img()
         plt.plot([city1_cords[1], city2_cords[1]], [city1_cords[0], city2_cords[0]],
-         color='red', linewidth=2, marker='o',
+         color= random_color , linewidth=2, marker='o',
          transform=ccrs.Geodetic(),  # Используем геодезическую проекцию для преобразования координат
          )
         plt.text(city1_cords[1] + 3, city1_cords[0] + 12, city1,
